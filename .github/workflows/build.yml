@@ -124,6 +124,6 @@ jobs:
           name: ${{ github.ref_name }}
           generate_release_notes: true
           files: |
-            release-assets/anland-awl.zip
+            release-assets/module/anland-awl.zip
             release-assets/anland-wayland.apk
             release-assets/anlandx.tar.gz
