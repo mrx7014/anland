@@ -292,8 +292,13 @@ anlandx:
 	# need it wherever the distro's xorgproto is older (Ubuntu 24.04 ships 1.3)
 	DL="$(OUT)/dl"; mkdir -p "$$DL"
 	if [ ! -f "$$DL/xorgproto-2024.1.tar.xz" ]; then
-	  curl -fsSL --retry 3 -o "$$DL/xorgproto-2024.1.tar.xz" \
+	  rm -f "$$DL/xorgproto-2024.1.tar.xz.tmp"
+	  curl -fL --retry 8 --retry-all-errors --retry-delay 2 --connect-timeout 20 \
+	    --max-time 300 -o "$$DL/xorgproto-2024.1.tar.xz.tmp" \
 	    https://xorg.freedesktop.org/releases/individual/proto/xorgproto-2024.1.tar.xz
+	  echo "372225fd40815b8423547f5d890c5debc72e88b91088fbfb13158c20495ccb59  $$DL/xorgproto-2024.1.tar.xz.tmp" \
+	    | sha256sum -c --quiet || { rm -f "$$DL/xorgproto-2024.1.tar.xz.tmp"; echo "ERROR: checksum xorgproto-2024.1.tar.xz download"; exit 1; }
+	  mv "$$DL/xorgproto-2024.1.tar.xz.tmp" "$$DL/xorgproto-2024.1.tar.xz"
 	fi
 	echo "372225fd40815b8423547f5d890c5debc72e88b91088fbfb13158c20495ccb59  $$DL/xorgproto-2024.1.tar.xz" \
 	  | sha256sum -c --quiet || { echo "ERROR: checksum xorgproto-2024.1.tar.xz"; exit 1; }
